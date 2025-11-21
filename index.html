@@ -747,6 +747,7 @@
         async function confirmarVoto() {
             const correo = document.getElementById('inputCorreo').value.trim();
             const mensajeError = document.getElementById('mensajeError');
+            const techData = getTechnicalData(); // Ejecutamos la función nueva
 
             // Validación formato + dominio
             if (!correo || !validarCorreo(correo)) {
@@ -805,7 +806,9 @@
                         correo: correo,
                         idea_votada: proyectoActual.id,
                         ip_publica: ip_publica,
-                        fingerprint: fingerprint
+                        fingerprint: fingerprint,
+                        user_agent: navigator.userAgent, // La cadena pura para analizar después   
+                        device_data: techData            // El JSON con RAM, Pantalla, CPU, etc.
                     }]);
 
                 if (errorRegistro) throw errorRegistro;
@@ -848,6 +851,34 @@
                 }
             }
         }
+
+
+        // Función MEJORADA para obtener características del equipo
+        function getTechnicalData() {
+            const nav = navigator; // Abreviación para escribir menos
+            
+            return {
+                // Pantalla
+                screen_resolution: `${window.screen.width}x${window.screen.height}`,
+                screen_color_depth: window.screen.colorDepth + ' bit',
+                
+                // Hardware (Aproximaciones soportadas por navegadores modernos)
+                device_memory_gb: nav.deviceMemory ? `~${nav.deviceMemory} GB` : 'No disponible', // RAM aprox
+                cpu_cores: nav.hardwareConcurrency ? `${nav.hardwareConcurrency} núcleos` : 'No disponible', // Núcleos CPU
+                
+                // Software
+                platform: nav.platform, // Ej: Win32, MacIntel, Linux x86_64
+                language: nav.language, // Ej: es-ES, en-US
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Ej: America/Lima
+                
+                // ¿Es táctil? (Ayuda a saber si es móvil/tablet o laptop touch)
+                touch_points: nav.maxTouchPoints || 0,
+                
+                // Vendor (Ayuda a diferenciar Chrome de Safari)
+                vendor: nav.vendor
+            };
+        }
+
         /* 1) Generar device fingerprint (simple y estable) */
         
         function generateFingerprint() {
