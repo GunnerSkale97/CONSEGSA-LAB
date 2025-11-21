@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vota por tu Idea Favorita</title>
+    <style>
+        :root {
+            --portalThemeColor1: #f8f9fa;
+            --portalThemeColor6: #2c3e50;
+            --portalThemeColor7: #2c3e50;
+            --primary-color: #3498db;
+            --secondary-color: #ff7e14;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .sectionBlockLayout {
+            padding: 8px;
+            margin: 0px;
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 60vh;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0.85;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80");
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .col-md-6, .col-md-12 {
+            padding: 0 15px;
+        }
+
+        .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .col-md-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .columnBlockLayout {
+            min-width: 250px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 15px;
+        }
+
+        .button1 {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .button1:hover {
+            background-color: #2980b9;
+        }
+
+        .button1:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .button-success {
+            background-color: var(--success-color);
+        }
+
+        .button-success:hover {
+            background-color: #218838;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Estilos para el modal de infografía */
+        .modal-infografia {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-contenido-infografia {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90vh;
+            width: 800px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .contenido-infografia img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .contenido-infografia iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .modal-botones-infografia {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .btn-cerrar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .btn-cerrar:hover {
+            color: #333;
+        }
+
+        .btn-secundario {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-secundario:hover {
+            background: #5a6268;
+        }
+
+        /* Sección de correo */
+        #seccionCorreo {
+            display: none;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #0078d4;
+        }
+
+        #mensajeError {
+            color: var(--danger-color);
+            margin-top: 10px;
+            display: none;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            background: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            
+            .modal-contenido-infografia {
+                padding: 20px;
+                max-width: 95%;
+            }
+            
+            .contenido-infografia iframe {
+                height: 300px;
+            }
+        }
+
+        /* Estilos para la sección de ideas */
+        .idea-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .idea-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .votos-count {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div data-component-theme="portalThemeColor6" class="sectionBlockLayout">
+        <div class="container">
+            <div class="col-md-12 columnBlockLayout" style="margin: 180px 0px;">
+                <h1 style="color: #ffffff; text-align: center; background-color: rgba(0, 0, 0, 0.6); padding: 20px;">
+                    <b>Vota por tu Idea Favorita</b>
+                </h1>
+                <h4 style="text-align: center; color: #ff7e14;">
+                    Explora las ideas innovadoras y registra tu voto una sola vez
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ideas Section -->
+    <div data-component-theme="portalThemeColor1" class="sectionBlockLayout" style="padding: 20px 0px;">
+        <div class="container">
+            <h1 style="text-align: center; color: var(--portalThemeColor7);">Ideas innovadoras</h1>
+            
+            <!-- Sección para ingresar correo -->
+            <div id="seccionCorreo">
+                <h3 id="proyectoSeleccionadoTexto" style="margin-top: 0;"></h3>
+                <div style="display: flex; gap: 10px; align-items: end; flex-wrap: wrap;">
+                    <div style="flex-grow: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Ingresa tu correo electrónico:</label>
+                        <input type="email" id="inputCorreo" placeholder="tu.correo@empresa.com" />
+                    </div>
+                    <button onclick="confirmarVoto()" class="button1" style="width: auto; padding: 10px 20px;">Confirmar Voto</button>
+                    <button onclick="cancelarVoto()" class="button1" style="width: auto; padding: 10px 20px; background: #6c757d;">Cancelar</button>
+                </div>
+                <div id="mensajeError"></div>
+            </div>
+
+            <!-- Ideas Container -->
+            <div class="row" id="ideasContainer">
+                <!-- Las ideas se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Infografía -->
+    <div id="modalInfografia" class="modal-infografia">
+        <div class="modal-contenido-infografia">
+            <button onclick="cerrarModalInfografia()" class="btn-cerrar">×</button>
+            <h3 id="tituloInfografia" style="margin-top: 0; margin-bottom: 20px; color: #2c3e50;"></h3>
+            <div id="contenidoInfografia" class="contenido-infografia">
+                <!-- Aquí se cargará la infografía o media -->
+            </div>
+            <div class="modal-botones-infografia">
+                <button onclick="cerrarModalInfografia()" class="btn-secundario">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo para las ideas
+        const ideasData = [
+            {
+                id: 1,
+                titulo: "ANALISIS PREDICTIVO DE SINIESTROS",
+                autor: "Antonio Arauco",
+                video_url: "./Antonio Arauco - Torneo de innovación.mp4",
+                infografia_url: "./arauco1.png",
+                infografia_tipo: "imagen",
+                votos: 15
+            },
+            {
+                id: 2,
+                titulo: "Idea innovadora",
+                autor: "Jeimy Pradel",
+                video_url: "./Jeimy Pradel - Torneo de innovación.mp4",
+                infografia_url: "/Jeimy Pradel - Torneo de innovación.png",
+                infografia_tipo: "imagen",
+                votos: 12
+            },
+            {
+                id: 3,
+                titulo: "AUTOMATIZACION INTELIGENTE DEL PROCESO DE COTIZACION",
+                autor: "Hilda Salas",
+                video_url: "./Hilda Salas - Torneo de innovación (1).mp4",
+                infografia_url: "./hilda.png",
+                infografia_tipo: "video",
+                votos: 8
+            },
+            {
+                id: 4,
+                titulo: "REALIDAD VIRTUAL PARA COMUNICACIONES CORPORATIVAS",
+                autor: "Jhonatan Vargas",
+                video_url: "./Jhonatan Vargas - Torneo de innovación.mp4",
+                infografia_url: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+                infografia_tipo: "imagen",
+                votos: 20
+            }
+        ];
+
+        let proyectoActual = null;
+        let usuarioHaVotado = false;
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarIdeas();
+            verificarSiUsuarioYaVoto();
+        });
+
+        // Función para cargar las ideas
+        function cargarIdeas() {
+            const container = document.getElementById('ideasContainer');
+            container.innerHTML = '';
+
+            ideasData.forEach(idea => {
+                const ideaElement = document.createElement('div');
+                ideaElement.className = 'col-md-6 columnBlockLayout';
+                ideaElement.innerHTML = `
+                    <div class="idea-card">
+                        <div class="votos-count">${idea.votos}</div>
+                        <div class="video-container">
+                            <iframe src="${idea.video_url}" frameborder="0" scrolling="no" allowfullscreen title="${idea.titulo}"></iframe>
+                        </div>
+                        <h3>${idea.titulo}</h3>
+                        <p>${idea.autor}</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="verInfografia('${idea.id}', '${idea.titulo}', '${idea.autor}', '${idea.infografia_url}', '${idea.infografia_tipo}')" 
+                                    class="button1 button-success" style="flex: 1;">Ver más</button>
+                            <button onclick="solicitarVoto('${idea.id}', '${idea.titulo} - ${idea.autor}')" 
+                                    class="button1 ${usuarioHaVotado ? 'disabled' : ''}" 
+                                    ${usuarioHaVotado ? 'disabled' : ''}>
+                                ${usuarioHaVotado ? 'Ya votaste' : 'Votar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(ideaElement);
+            });
+        }
+
+        // Función para verificar si el usuario ya votó
+        function verificarSiUsuarioYaVoto() {
+            // Usamos localStorage para simular que el usuario ya votó
+            usuarioHaVotado = localStorage.getItem('yaVoto') === 'true';
+        }
+
+        // Función para solicitar voto
+        function solicitarVoto(ideaId, proyecto) {
+            if (usuarioHaVotado) {
+                alert('Ya has votado. Solo puedes votar una vez.');
+                return;
+            }
+
+            proyectoActual = { id: ideaId, nombre: proyecto };
+            
+            // Mostrar la sección de correo
+            document.getElementById('seccionCorreo').style.display = 'block';
+            document.getElementById('proyectoSeleccionadoTexto').textContent = 'Votar por: ' + proyecto;
+            document.getElementById('inputCorreo').value = '';
+            document.getElementById('mensajeError').style.display = 'none';
+            
+            // Hacer scroll suave a la sección de correo
+            document.getElementById('seccionCorreo').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Enfocar el campo de correo
+            document.getElementById('inputCorreo').focus();
+        }
+
+        // Función para cancelar voto
+        function cancelarVoto() {
+            document.getElementById('seccionCorreo').style.display = 'none';
+            proyectoActual = null;
+        }
+
+        // Función para confirmar voto
+        async function confirmarVoto() {
+            const correo = document.getElementById('inputCorreo').value;
+            const mensajeError = document.getElementById('mensajeError');
+            
+            if (!correo || !validarCorreo(correo)) {
+                mensajeError.textContent = 'Por favor ingresa un correo electrónico válido';
+                mensajeError.style.display = 'block';
+                return;
+            }
+
+            // Mostrar indicador de carga
+            const btnConfirmar = document.querySelector('#seccionCorreo .button1');
+            const textoOriginal = btnConfirmar.textContent;
+            btnConfirmar.textContent = 'Registrando voto...';
+            btnConfirmar.disabled = true;
+
+            try {
+                // Aquí es donde conectaríamos con Supabase
+                console.log('Conectando con Supabase para registrar voto...');
+                console.log('Proyecto:', proyectoActual);
+                console.log('Correo:', correo);
+                
+                // Simulamos un delay de conexión
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // En una implementación real, aquí iría el código para conectar con Supabase:
+                /*
+                const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
+                const SUPABASE_ANON_KEY = 'tu-clave-anon-publica';
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Registrar el voto en Supabase
+                const { data, error } = await supabase
+                    .from('votos')
+                    .insert([
+                        { 
+                            idea_id: proyectoActual.id, 
+                            correo: correo,
+                            fecha_voto: new Date().toISOString()
+                        }
+                    ]);
+                
+                if (error) throw error;
+                
+                // Incrementar votos en la idea
+                const { data: idea, error: errorUpdate } = await supabase
+                    .rpc('incrementar_votos', { idea_id: proyectoActual.id });
+                */
+                
+                // Por ahora, simulamos el éxito del voto
+                const ideaIndex = ideasData.findIndex(idea => idea.id == proyectoActual.id);
+                if (ideaIndex !== -1) {
+                    ideasData[ideaIndex].votos += 1;
+                }
+                
+                // Éxito
+                alert('¡Gracias! Tu voto por "' + proyectoActual.nombre + '" ha sido registrado correctamente.');
+                localStorage.setItem('yaVoto', 'true');
+                usuarioHaVotado = true;
+                cancelarVoto();
+                cargarIdeas(); // Recargar para mostrar nuevos votos
+                
+            } catch (error) {
+                console.error('Error al registrar voto:', error);
+                mensajeError.textContent = 'Error al registrar el voto. Por favor intenta nuevamente.';
+                mensajeError.style.display = 'block';
+            }
+
+            // Restaurar botón
+            btnConfirmar.textContent = textoOriginal;
+            btnConfirmar.disabled = false;
+        }
+
+        // Función para validar correo
+        function validarCorreo(correo) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(correo);
+        }
+
+        // Funciones para el modal de infografía
+        function verInfografia(id, titulo, autor, url, tipo) {
+            document.getElementById('tituloInfografia').textContent = `${titulo} - ${autor}`;
+            const contenido = document.getElementById('contenidoInfografia');
+            
+            // Limpiar contenido anterior
+            contenido.innerHTML = '';
+            
+            // Cargar contenido según el tipo
+            if (tipo === 'imagen') {
+                contenido.innerHTML = `<img src="${url}" alt="Infografía de ${titulo}" />`;
+            } else if (tipo === 'video') {
+                contenido.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`;
+            } else if (tipo === 'pdf') {
+                contenido.innerHTML = `<iframe src="${url}"></iframe>`;
+            } else {
+                contenido.innerHTML = `<p>Contenido no disponible</p>`;
+            }
+            
+            // Mostrar modal
+            document.getElementById('modalInfografia').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarModalInfografia() {
+            document.getElementById('modalInfografia').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModalInfografia();
+            }
+        });
+
+        // Cerrar modal haciendo clic fuera del contenido
+        document.getElementById('modalInfografia').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModalInfografia();
+            }
+        });
+    </script>
+</body>
+</html>
