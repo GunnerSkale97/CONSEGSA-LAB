@@ -37,7 +37,7 @@
             background-repeat: no-repeat;
             background-size: cover;
             opacity: 0.85;
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80");
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("./bgMain.jpg");
         }
 
         .container {
@@ -240,6 +240,16 @@
                 max-width: 100%;
             }
             
+            /* Header responsive */
+            header > div {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            header nav ul {
+                gap: 1rem;
+            }
+            
             .modal-contenido-infografia {
                 padding: 20px;
                 max-width: 95%;
@@ -276,40 +286,178 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
+            /* Estilos para el modal de votación */
+        .modal-votacion {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Mayor que el modal de infografía */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-contenido-votacion {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-cerrar-votacion {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cerrar-votacion:hover {
+            color: #333;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+        }
+
+
+        /* Estilos para miniaturas de video */
+.video-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.video-thumbnail:hover .thumbnail-image {
+    transform: scale(1.05);
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.video-thumbnail:hover .play-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.play-button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 126, 20, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.video-thumbnail:hover .play-button {
+    transform: scale(1.1);
+    background: rgba(255, 126, 20, 1);
+}
+
+/* Asegurar que el video ocupe todo el contenedor */
+.video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+}
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+        <header style="background: #1a365d; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;">
+            <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="./img9-removebg-preview.png" 
+                     alt="Consegsa LAB Logo" 
+                     style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
+                    <h1 style="color: white; font-size: 1.8rem; font-weight: 700;">Consegsa LAB</h1>
+                </div>
+                <nav>
+                    <ul style="display: flex; gap: 2rem; list-style: none;">
+                        <li><a href="#" style="color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 4px; background-color: #ff7e14;">Página principal</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+    <!-- Hero Section (MANTIENE TU CÓDIGO ORIGINAL) -->
     <div data-component-theme="portalThemeColor6" class="sectionBlockLayout">
         <div class="container">
             <div class="col-md-12 columnBlockLayout" style="margin: 180px 0px;">
-                <h1 style="color: #ffffff; text-align: center; background-color: rgba(0, 0, 0, 0.6); padding: 20px;">
+                <h1 style="color: #ffffff; text-align: center; background-color: rgba(0, 0, 0, 0.509); padding: 20px;">
                     <b>Vota por tu Idea Favorita</b>
                 </h1>
-                <h4 style="text-align: center; color: #ff7e14;">
+                <h3 style="text-align: center; color: #b2f67f;">
                     Explora las ideas innovadoras y registra tu voto una sola vez
-                </h4>
+                </h3>
             </div>
         </div>
     </div>
 
     <!-- Ideas Section -->
-    <div data-component-theme="portalThemeColor1" class="sectionBlockLayout" style="padding: 20px 0px;">
+    <div style="background-color: #f8f9fa; padding: 60px 0;">
         <div class="container">
             <h1 style="text-align: center; color: var(--portalThemeColor7);">Ideas innovadoras</h1>
             
-            <!-- Sección para ingresar correo -->
-            <div id="seccionCorreo">
-                <h3 id="proyectoSeleccionadoTexto" style="margin-top: 0;"></h3>
-                <div style="display: flex; gap: 10px; align-items: end; flex-wrap: wrap;">
-                    <div style="flex-grow: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Ingresa tu correo electrónico:</label>
-                        <input type="email" id="inputCorreo" placeholder="tu.correo@empresa.com" />
+            <!-- Modal de Votación -->
+            <div id="modalVotacion" class="modal-votacion" style="display: none;">
+                <div class="modal-contenido-votacion">
+                    <button onclick="cancelarVoto()" class="btn-cerrar-votacion">×</button>
+                    <h3 id="proyectoSeleccionadoTexto" style="margin-top: 0; margin-bottom: 20px; color: #2c3e50;"></h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Ingresa tu correo electrónico:</label>
+                        <input type="email" id="inputCorreo" placeholder="tu.correo@empresa.com" 
+                            style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; color: #333; background: white;" />
                     </div>
-                    <button onclick="confirmarVoto()" class="button1" style="width: auto; padding: 10px 20px;">Confirmar Voto</button>
-                    <button onclick="cancelarVoto()" class="button1" style="width: auto; padding: 10px 20px; background: #6c757d;">Cancelar</button>
+                    
+                    <div id="mensajeError" style="color: #dc3545; margin: 10px 0; display: none;"></div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="cancelarVoto()" class="button1" style="width: auto; padding: 10px 20px; background: #6c757d;">Cancelar</button>
+                        <button onclick="confirmarVoto()" class="button1" style="width: auto; padding: 10px 20px;">Confirmar Voto</button>
+                    </div>
                 </div>
-                <div id="mensajeError"></div>
             </div>
 
             <!-- Ideas Container -->
@@ -318,7 +466,19 @@
             </div>
         </div>
     </div>
-
+        <!-- Nueva Sección con Fondo Oscuro -->
+    <div style="background-color: #2c3e50; padding: 60px 0;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px; color: white;">Presentación de Proyectos</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="text-align: center; color: white;">
+                        <h3>Explora cada proyecto en detalle</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal Infografía -->
     <div id="modalInfografia" class="modal-infografia">
         <div class="modal-contenido-infografia">
@@ -332,7 +492,7 @@
             </div>
         </div>
     </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // Datos de ejemplo para las ideas
         const ideasData = [
@@ -342,8 +502,9 @@
                 autor: "Antonio Arauco",
                 video_url: "./Antonio Arauco - Torneo de innovación.mp4",
                 infografia_url: "./arauco1.png",
+                thumbnail_url: "./a1.png",
                 infografia_tipo: "imagen",
-                votos: 15
+                votos: 1
             },
             {
                 id: 2,
@@ -351,8 +512,9 @@
                 autor: "Jeimy Pradel",
                 video_url: "./Jeimy Pradel - Torneo de innovación.mp4",
                 infografia_url: "/Jeimy Pradel - Torneo de innovación.png",
+                thumbnail_url: "./a2.png",
                 infografia_tipo: "imagen",
-                votos: 12
+                votos: 2
             },
             {
                 id: 3,
@@ -360,30 +522,33 @@
                 autor: "Hilda Salas",
                 video_url: "./Hilda Salas - Torneo de innovación (1).mp4",
                 infografia_url: "./hilda.png",
+                thumbnail_url: "./a3.png",
                 infografia_tipo: "video",
-                votos: 8
+                votos: 3
             },
             {
                 id: 4,
                 titulo: "REALIDAD VIRTUAL PARA COMUNICACIONES CORPORATIVAS",
                 autor: "Jhonatan Vargas",
                 video_url: "./Jhonatan Vargas - Torneo de innovación.mp4",
-                infografia_url: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-                infografia_tipo: "imagen",
-                votos: 20
+                infografia_url: "./Infografía Realidad Virtual JHONATAN VARGAS.pdf",
+                thumbnail_url: "./a4.png",
+                infografia_tipo: "pdf",
+                votos: 4
             }
         ];
-
+        
+        
         let proyectoActual = null;
         let usuarioHaVotado = false;
 
-        // Inicializar la aplicación
+        // Inicializar la aplicaciónR!s!84u7-&N5Qs*
         document.addEventListener('DOMContentLoaded', function() {
             cargarIdeas();
             verificarSiUsuarioYaVoto();
         });
 
-        // Función para cargar las ideas
+        // Función para cargar las ideas R!s!84u7-&N5Qs*
         function cargarIdeas() {
             const container = document.getElementById('ideasContainer');
             container.innerHTML = '';
@@ -395,7 +560,17 @@
                     <div class="idea-card">
                         <div class="votos-count">${idea.votos}</div>
                         <div class="video-container">
-                            <iframe src="${idea.video_url}" frameborder="0" scrolling="no" allowfullscreen title="${idea.titulo}"></iframe>
+                            <div class="video-thumbnail" onclick="reproducirVideo(this, '${idea.video_url}')">
+                                <img src="${idea.thumbnail_url}" alt="${idea.titulo}" class="thumbnail-image">
+                                <div class="play-overlay">
+                                    <div class="play-button">▶</div>
+                                </div>
+                            </div>
+                            <!-- Video oculto inicialmente -->
+                            <video class="video-player" controls style="display: none; width: 100%; height: 100%;">
+                                <source src="${idea.video_url}" type="video/mp4">
+                                Tu navegador no soporta el elemento de video.
+                            </video>
                         </div>
                         <h3>${idea.titulo}</h3>
                         <p>${idea.autor}</p>
@@ -420,7 +595,7 @@
             usuarioHaVotado = localStorage.getItem('yaVoto') === 'true';
         }
 
-        // Función para solicitar voto
+        // Función para solicitar voto (MODIFICADA)
         function solicitarVoto(ideaId, proyecto) {
             if (usuarioHaVotado) {
                 alert('Ya has votado. Solo puedes votar una vez.');
@@ -429,29 +604,23 @@
 
             proyectoActual = { id: ideaId, nombre: proyecto };
             
-            // Mostrar la sección de correo
-            document.getElementById('seccionCorreo').style.display = 'block';
+            // Mostrar el modal de votación
+            document.getElementById('modalVotacion').style.display = 'flex';
             document.getElementById('proyectoSeleccionadoTexto').textContent = 'Votar por: ' + proyecto;
             document.getElementById('inputCorreo').value = '';
             document.getElementById('mensajeError').style.display = 'none';
-            
-            // Hacer scroll suave a la sección de correo
-            document.getElementById('seccionCorreo').scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
             
             // Enfocar el campo de correo
             document.getElementById('inputCorreo').focus();
         }
 
-        // Función para cancelar voto
+        // Función para cancelar voto (MODIFICADA)
         function cancelarVoto() {
-            document.getElementById('seccionCorreo').style.display = 'none';
+            document.getElementById('modalVotacion').style.display = 'none';
             proyectoActual = null;
         }
 
-        // Función para confirmar voto
+        // Función para confirmar voto - CON SUPABASE
         async function confirmarVoto() {
             const correo = document.getElementById('inputCorreo').value;
             const mensajeError = document.getElementById('mensajeError');
@@ -461,57 +630,79 @@
                 mensajeError.style.display = 'block';
                 return;
             }
-
+            
             // Mostrar indicador de carga
-            const btnConfirmar = document.querySelector('#seccionCorreo .button1');
+            const btnConfirmar = document.querySelector('#modalVotacion .button1');
             const textoOriginal = btnConfirmar.textContent;
             btnConfirmar.textContent = 'Registrando voto...';
             btnConfirmar.disabled = true;
 
             try {
-                // Aquí es donde conectaríamos con Supabase
+                // CONEXIÓN CON SUPABASE
+                const SUPABASE_URL = 'https://agnfpgaffqhawncjjcew.supabase.co';
+                const SUPABASE_ANON_KEY = 'sb_publishable_5sUSC7y9Ue_3HdmdS12grw_O9lVWNpG'; // PON TU CLAVE REAL
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
                 console.log('Conectando con Supabase para registrar voto...');
                 console.log('Proyecto:', proyectoActual);
                 console.log('Correo:', correo);
                 
-                // Simulamos un delay de conexión
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // En una implementación real, aquí iría el código para conectar con Supabase:
-                /*
-                const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-                const SUPABASE_ANON_KEY = 'tu-clave-anon-publica';
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                
-                // Registrar el voto en Supabase
-                const { data, error } = await supabase
+                // 1. Verificar si el correo ya votó
+                const { data: votoExistente, error: errorVoto } = await supabase
+                    .from('votos')
+                    .select('id')
+                    .eq('correo', correo)
+                    .single();
+
+                if (votoExistente) {
+                    mensajeError.textContent = 'Este correo ya ha registrado un voto. Solo se permite un voto por persona.';
+                    mensajeError.style.display = 'block';
+                    btnConfirmar.textContent = textoOriginal;
+                    btnConfirmar.disabled = false;
+                    return;
+                }
+
+                // 2. Registrar el voto en Supabase
+                const { data: nuevoVoto, error: errorRegistro } = await supabase
                     .from('votos')
                     .insert([
                         { 
-                            idea_id: proyectoActual.id, 
                             correo: correo,
-                            fecha_voto: new Date().toISOString()
+                            idea_votada: proyectoActual.id
                         }
                     ]);
+
+                if (errorRegistro) throw errorRegistro;
+
+                // 3. Actualizar el contador en Supabase
+                const { data: contadorActual, error: errorContador } = await supabase
+                    .from('contador_ideas')
+                    .select('votos')
+                    .eq('idea_id', proyectoActual.id)
+                    .single();
+
+                if (!errorContador) {
+                    const nuevosVotos = (contadorActual.votos || 0) + 1;
+                    
+                    const { error: errorUpdate } = await supabase
+                        .from('contador_ideas')
+                        .update({ votos: nuevosVotos })
+                        .eq('idea_id', proyectoActual.id);
+
+                    if (errorUpdate) throw errorUpdate;
+                }
+
+                // Éxito
+                alert('¡Gracias! Tu voto por "' + proyectoActual.nombre + '" ha sido registrado correctamente.');
+                localStorage.setItem('correoVotante', correo);
+                usuarioHaVotado = true;
+                cancelarVoto(); // Esto ahora cierra el modal
                 
-                if (error) throw error;
-                
-                // Incrementar votos en la idea
-                const { data: idea, error: errorUpdate } = await supabase
-                    .rpc('incrementar_votos', { idea_id: proyectoActual.id });
-                */
-                
-                // Por ahora, simulamos el éxito del voto
+                // Actualizar la vista con los nuevos votos
                 const ideaIndex = ideasData.findIndex(idea => idea.id == proyectoActual.id);
                 if (ideaIndex !== -1) {
                     ideasData[ideaIndex].votos += 1;
                 }
-                
-                // Éxito
-                alert('¡Gracias! Tu voto por "' + proyectoActual.nombre + '" ha sido registrado correctamente.');
-                localStorage.setItem('yaVoto', 'true');
-                usuarioHaVotado = true;
-                cancelarVoto();
                 cargarIdeas(); // Recargar para mostrar nuevos votos
                 
             } catch (error) {
@@ -520,11 +711,9 @@
                 mensajeError.style.display = 'block';
             }
 
-            // Restaurar botón
             btnConfirmar.textContent = textoOriginal;
             btnConfirmar.disabled = false;
         }
-
         // Función para validar correo
         function validarCorreo(correo) {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -573,6 +762,36 @@
                 cerrarModalInfografia();
             }
         });
+
+
+        // Pausar otros videos cuando se reproduce uno nuevo
+        function pausarOtrosVideos(currentVideo) {
+            document.querySelectorAll('.video-player').forEach(video => {
+                if (video !== currentVideo && !video.paused) {
+                    video.pause();
+                }
+            });
+        }
+        // Modificar la función reproducirVideo
+        function reproducirVideo(thumbnailElement, videoUrl) {
+            const videoContainer = thumbnailElement.parentElement;
+            const thumbnail = thumbnailElement;
+            const videoPlayer = videoContainer.querySelector('.video-player');
+            
+            // Pausar otros videos
+            pausarOtrosVideos(videoPlayer);
+            
+            // Ocultar miniatura y mostrar video
+            thumbnail.style.display = 'none';
+            videoPlayer.style.display = 'block';
+            
+            // Cargar y reproducir el video
+            videoPlayer.src = videoUrl;
+            videoPlayer.load();
+            videoPlayer.play().catch(error => {
+                console.log('Reproducción automática bloqueada:', error);
+            });
+        }
     </script>
 </body>
 </html>
