@@ -632,9 +632,18 @@
             document.getElementById('modalVotacion').style.display = 'none';
             proyectoActual = null;
         }
+        /* 3) Validar correo (formato + dominio) - versión mejorada */
+        function validarCorreo(correo) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regex.test(correo)) return false;
+            if (!correo.toLowerCase().endsWith('@consegsa.com')) return false;
+            return true;
+        }
 
         // Función para confirmar voto - CON SUPABASE
+        /* 
         async function confirmarVoto() {
+
             const correo = document.getElementById('inputCorreo').value;
             const mensajeError = document.getElementById('mensajeError');
             
@@ -644,13 +653,20 @@
                 return;
             }
             
-            // Mostrar indicador de carga
+            // Indicador de carga (si existe botón)
             const btnConfirmar = document.querySelector('#modalVotacion .button1');
-            const textoOriginal = btnConfirmar.textContent;
-            btnConfirmar.textContent = 'Registrando voto...';
-            btnConfirmar.disabled = true;
+            const textoOriginal = btnConfirmar ? btnConfirmar.textContent : null;
+            if (btnConfirmar) {
+                btnConfirmar.textContent = 'Registrando voto...';
+                btnConfirmar.disabled = true;
+            }
 
             try {
+
+                const fingerprint = generateFingerprint();
+                const ip_publica = await getPublicIP();
+
+                console.log('fingerprint:', fingerprint, 'ip_publica:', ip_publica);
                 // CONEXIÓN CON SUPABASE
                 const SUPABASE_URL = 'https://agnfpgaffqhawncjjcew.supabase.co';
                 const SUPABASE_ANON_KEY = 'sb_publishable_5sUSC7y9Ue_3HdmdS12grw_O9lVWNpG'; // PON TU CLAVE REAL
@@ -661,11 +677,11 @@
                 console.log('Correo:', correo);
                 
                 // 1. Verificar si el correo ya votó
-                const { data: votoExistente, error: errorVoto } = await supabase
+                const { data: existing, error: errExist } = await supabase
                     .from('votos')
-                    .select('id')
-                    .eq('correo', correo)
-                    .single();
+                    .select('id, correo, fingerprint, ip_publica, created_at')
+                    .or(orCond)
+                    .limit(1);
 
                 if (votoExistente) {
                     mensajeError.textContent = 'Este correo ya ha registrado un voto. Solo se permite un voto por persona.';
@@ -727,11 +743,144 @@
             btnConfirmar.textContent = textoOriginal;
             btnConfirmar.disabled = false;
         }
-        // Función para validar correo
-        function validarCorreo(correo) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return regex.test(correo);
+        */
+        async function confirmarVoto() {
+            const correo = document.getElementById('inputCorreo').value.trim();
+            const mensajeError = document.getElementById('mensajeError');
+
+            // Validación formato + dominio
+            if (!correo || !validarCorreo(correo)) {
+                mensajeError.textContent = 'Por favor ingresa un correo corporativo válido (@consegsa.com)';
+                mensajeError.style.display = 'block';
+                return;
+            }
+
+            // Indicador de carga (si existe botón)
+            const btnConfirmar = document.querySelector('#modalVotacion .button1');
+            const textoOriginal = btnConfirmar ? btnConfirmar.textContent : null;
+            if (btnConfirmar) {
+                btnConfirmar.textContent = 'Registrando voto...';
+                btnConfirmar.disabled = true;
+            }
+
+            try {
+                const fingerprint = generateFingerprint();
+                const ip_publica = await getPublicIP();
+
+                console.log('fingerprint:', fingerprint, 'ip_publica:', ip_publica);
+
+                // Conectar a Supabase (usa tus valores)
+                const SUPABASE_URL = 'https://agnfpgaffqhawncjjcew.supabase.co';
+                const SUPABASE_ANON_KEY = 'sb_publishable_5sUSC7y9Ue_3HdmdS12grw_O9lVWNpG'; // reemplaza si corresponde
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+                // 1) Verificar duplicados por correo OR fingerprint OR ip_publica
+                // Construimos la condición OR (supabase-js v2 .or expects a string con comas)
+                const orParts = [];
+                orParts.push(`correo.eq.${encodeURIComponent(correo)}`);
+                if (fingerprint) orParts.push(`fingerprint.eq.${encodeURIComponent(fingerprint)}`);
+                if (ip_publica) orParts.push(`ip_publica.eq.${encodeURIComponent(ip_publica)}`);
+                const orCond = orParts.join(',');
+
+                // 1) Verificar duplicados solo por correo
+                const { data: existing, error: errExist } = await supabase
+                    .from('votos')
+                    .select('id, correo, created_at')
+                    .eq('correo', correo)
+                    .limit(1);
+
+                if (errExist) throw errExist;
+
+                if (existing && existing.length > 0) {
+                    mensajeError.textContent = 'Este correo ya ha registrado un voto. Solo se permite un voto por persona.';
+                    mensajeError.style.display = 'block';
+                    return;
+                }
+
+
+                // 2) Insertar voto con metadatos
+                const { data: nuevoVoto, error: errorRegistro } = await supabase
+                    .from('votos')
+                    .insert([{
+                        correo: correo,
+                        idea_votada: proyectoActual.id,
+                        ip_publica: ip_publica,
+                        fingerprint: fingerprint
+                    }]);
+
+                if (errorRegistro) throw errorRegistro;
+
+                // 3) Actualizar contador_ideas (si usas tabla contador_ideas)
+                const { data: contadorActual, error: errorContador } = await supabase
+                    .from('contador_ideas')
+                    .select('votos')
+                    .eq('idea_id', proyectoActual.id)
+                    .single();
+
+                if (!errorContador && contadorActual) {
+                    const nuevosVotos = (contadorActual.votos || 0) + 1;
+                    const { error: errorUpdate } = await supabase
+                        .from('contador_ideas')
+                        .update({ votos: nuevosVotos })
+                        .eq('idea_id', proyectoActual.id);
+                    if (errorUpdate) throw errorUpdate;
+                }
+
+                // Éxito
+                alert('¡Gracias! Tu voto ha sido registrado correctamente.');
+                localStorage.setItem('correoVotante', correo);
+                localStorage.setItem('yaVoto', 'true');
+                usuarioHaVotado = true;
+                cancelarVoto();
+
+                const ideaIndex = ideasData.findIndex(idea => idea.id == proyectoActual.id);
+                if (ideaIndex !== -1) ideasData[ideaIndex].votos += 1;
+                cargarIdeas();
+
+            } catch (error) {
+                console.error('Error al registrar voto:', error);
+                mensajeError.textContent = 'Error al registrar el voto. Intenta nuevamente o contacta a sistemas.';
+                mensajeError.style.display = 'block';
+            } finally {
+                if (btnConfirmar) {
+                    btnConfirmar.textContent = textoOriginal;
+                    btnConfirmar.disabled = false;
+                }
+            }
         }
+        /* 1) Generar device fingerprint (simple y estable) */
+        
+        function generateFingerprint() {
+            try {
+                const nav = navigator;
+                const components = [
+                    nav.userAgent || '',
+                    nav.platform || '',
+                    nav.language || '',
+                    screen.width || '',
+                    screen.height || '',
+                    screen.colorDepth || '',
+                    Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+                ];
+                const raw = components.join('||');
+                // Hash simple: se usa btoa para acortar; puedes reemplazar por SHA si quieres mayor seguridad
+                return btoa(unescape(encodeURIComponent(raw))).slice(0, 64);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /* 2) Obtener IP pública vía api.ipify (fallback tolerante) */
+        async function getPublicIP() {
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const j = await r.json();
+                return j.ip || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
 
         // Funciones para el modal de infografía
         function verInfografia(id, titulo, autor, url, tipo) {
