@@ -592,7 +592,8 @@
                                     class="button1 button-success" style="flex: 1;">Ver más</button>
                             <button onclick="solicitarVoto('${idea.id}', '${idea.titulo} - ${idea.autor}')" 
                                     class="button1 ${usuarioHaVotado ? 'disabled' : ''}" 
-                                    ${usuarioHaVotado ? 'disabled' : ''}>
+                                    ${usuarioHaVotado ? 'disabled' : ''}
+                                    style="visibility: hidden;">
                                 ${usuarioHaVotado ? 'Ya votaste' : 'Votar'}
                             </button>
                         </div>
